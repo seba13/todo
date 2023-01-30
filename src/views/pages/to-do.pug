@@ -1,0 +1,31 @@
+extends ../templates/template
+
+
+
+block to-do
+    
+    .container-task
+
+        form.task
+            ul.task-list
+                li.task-list__item
+                    h2.task-list__title To-Do
+                li.task-list__item
+                    input(type="text" placeholder="Titulo").task-list__input
+                    input(type="text" placeholder="Descripcion").task-list__input
+                    input(type="submit", value="Guardar Tarea").task-list__input
+
+        form.task
+            ul.task-list
+                each task in tasks
+                    li.task-list__item
+                        label(for="titulo"+task.id_task).task-list__label= "Titulo:" 
+                        input(type="text" value=task.nombre id="titulo"+task.id_task).task-list__input
+                        ul: li.task-list__sub-item 
+                            label(for="descripcion"+task.id_task)= "Descripcion:"
+                            input(type="text" value=task.descripcion id="descripcion"+task.id_task).task-list__input
+                            li.task-list__sub-item 
+                                label(for="estado"+task.id_task)= "Estado de tarea:" 
+                                input(type="checkbox" value=task.estado id="estado"+task.id_task)
+                li.task-list__item
+                    input(type="submit", value="Guardar Cambios")

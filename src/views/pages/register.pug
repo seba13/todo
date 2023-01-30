@@ -1,0 +1,16 @@
+extends ../templates/template
+
+
+block register
+    
+    form(method="POST" action="/register").login-form
+        .login-form__wrapper 
+            h2.login-form__title Registrar Usuario
+        .login-form__wrapper
+            input(type="text" id="input-user" name="username" placeholder="username").login-form__input.login-form__input--doble
+            input(type="password" id="input-password" name="password" placeholder="password").login-form__input.login-form__input--doble
+        .login-form__wrapper
+            input(type="text" id="input-name" name="fullname" placeholder="fullname").login-form__input
+        .login-form__wrapper
+            input(type="submit" id="input-submit" value="Registrarse").login-form__input.login-form__input--submit
+    include ../partials/modal-message

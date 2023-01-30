@@ -1,0 +1,9 @@
+extends ../templates/template
+
+block home
+    
+    include ../partials/modal-message
+    if(user)
+        h1.title Bienvenido !{user.username}
+    else
+        h1 indefinido

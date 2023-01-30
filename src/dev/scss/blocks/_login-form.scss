@@ -1,0 +1,69 @@
+
+
+
+.login-form
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: .5rem;
+    width: 90%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba($color: #fff, $alpha: .2);
+    
+    &__wrapper
+    {
+        padding: 1rem 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        justify-content: space-around;
+
+        &:first-child
+        {
+            margin-top: 2rem;
+        }
+        &:last-child
+        {
+            margin-bottom: 2rem;
+        }
+    }
+
+    &__title
+    {
+        font-size: 2rem;
+        color: #fff;
+    }
+
+
+    &__input 
+    {
+        // max-width: 100%;
+        width: 90%;
+        border: none;
+        outline: none;
+        border-radius: .4rem;
+        padding: .3rem .5rem;
+
+
+        &--doble 
+        {
+            width: 40%;
+        }
+
+        &--submit
+        {
+            width: 60%;
+        }
+
+    }
+
+    @include laptop {
+        width: 700px;
+    }
+}
