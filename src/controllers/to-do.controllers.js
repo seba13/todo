@@ -2,6 +2,12 @@ import { getUser } from "./query/users/validityUser.js"
 import {getUserTask} from "./query/users/getUserTasks.js"
 
 
+
+/**
+ * funcion controladora que renderiza la plantilla to-do 
+ * @param {request} req 
+ * @param {response} res 
+ */
 export const renderTodo = (req, res) => {
 
 

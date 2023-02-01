@@ -11,6 +11,7 @@
 
 .login-form
 {
+    margin: 50px 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,10 +20,12 @@
     width: 90%;
     min-width: 320px;
     max-width: 400px;;
-    position: relative;
+    position: absolute;
+    z-index: 100;
+    top: 0;
     left: 50%;
-    top: 40%;
-    transform: translate(-50%, -45%);
+    // top: 50%;
+    transform: translate(-50%);
     background-color: #EBEAEF;
     
     &__user-icon
@@ -99,6 +102,7 @@
         &--submit
         {
             border: none;
+            cursor: pointer;
             padding: 26px 51px;
             align-self: center;
             width: auto;

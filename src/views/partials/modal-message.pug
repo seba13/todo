@@ -1,4 +1,3 @@
-
 if (message && message.length > 0)
     -let parrafo = ''
     -let flag = message[0].status == 'success' ? true : false;
@@ -6,4 +5,5 @@ if (message && message.length > 0)
     #modal-message.modal-message(class= flag ? 'modal-message--success' : 'modal-message--error')
         each string,index in message
             p.modal-message__title=string.title
-            p.modal-message__message=string.message
+            each message in string.message
+                p.modal-message__message=message

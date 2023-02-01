@@ -2,7 +2,12 @@ import { getUser } from "./query/users/validityUser.js"
 
 
 
-
+/**
+ * funcion controladora que renderiza el home de un usuario con autenticación
+ * de sesion, en caso de no tener autenticacion valida lo redirecciona a la plantilla index
+ * @param {request} req 
+ * @param {response} res 
+ */
 export const renderHome = (req, res) => {
     // console.log(req.cookies.user);
 
