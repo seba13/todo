@@ -386,7 +386,7 @@ body::after {
 }
 body main {
   position: relative;
-  z-index: 10;
+  z-index: 5;
   height: 100vh;
 }
 
@@ -638,7 +638,7 @@ body main {
   display: -ms-flexbox;
   display: flex;
   position: fixed;
-  z-index: 5000;
+  z-index: 1000;
   left: 100%;
   top: 3%;
   -webkit-transform: translate(calc(-100% - 10px), -3%) scale(1);
@@ -808,17 +808,26 @@ input::placeholder {
           transform: translate(-50%);
   background-color: #EBEAEF;
 }
+.login-form:hover .login-form__user-icon {
+  -webkit-transform: translate(-50%, -50%) scale(1.2);
+      -ms-transform: translate(-50%, -50%) scale(1.2);
+          transform: translate(-50%, -50%) scale(1.2);
+}
 .login-form__user-icon {
   top: 0;
   left: 50%;
   border-radius: 50%;
   background-color: #383838;
   color: #FF5400;
-  -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%) scale(1);
+      -ms-transform: translate(-50%, -50%) scale(1);
+          transform: translate(-50%, -50%) scale(1);
   position: absolute;
   font-size: 4rem;
+  -webkit-transition: -webkit-transform 0.5s ease;
+  transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
 }
 .login-form__wrapper {
   padding: 1rem 1rem;
@@ -1115,7 +1124,7 @@ nav .nav-menu__item a span {
     display: -ms-flexbox;
     display: flex;
     height: 100px;
-    z-index: 10;
+    z-index: 5;
     border-radius: 0;
     background-color: transparent;
     overflow: auto;

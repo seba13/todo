@@ -28,6 +28,11 @@
     transform: translate(-50%);
     background-color: #EBEAEF;
     
+    &:hover &__user-icon
+    {
+        transform: translate(-50%,-50%) scale(1.2);
+    }
+
     &__user-icon
     {
         top: 0;
@@ -35,9 +40,10 @@
         border-radius: 50%;
         background-color: #383838;
         color: $color-link-orange;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%) scale(1);
         position: absolute;
         font-size: 4rem;
+        transition: transform .5s ease;
     }
 
     &__wrapper

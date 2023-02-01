@@ -19,7 +19,7 @@
     border-radius: .5rem;
     display: flex;
     position: fixed;
-    z-index: 5000;
+    z-index: 1000;
     left: 100%;
     top: 3%;
     transform: translate(calc(-100% + -10px), -3%) scale(1);
@@ -28,6 +28,7 @@
     align-items: center;
     opacity: 0;
     animation: show 3s linear forwards, hide 1.4s 3s  linear forwards;
+    
     @keyframes show {
         0%
         {
