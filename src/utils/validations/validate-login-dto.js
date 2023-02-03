@@ -31,12 +31,12 @@ addErrors(ajv) //tipo
 
 const loginSchema = Type.Object({
     username : Type.String({
-        minLength : 5,
+        minLength : 4,
         maxLength : 16,
         errorMessage: {
             type: 'username debe ser de tipo String',
             maxLength: 'username debe tener un máximo de 16 caracteres',
-            minLength: 'username debe tener un mínimo de 5 caracteres'
+            minLength: 'username debe tener un mínimo de 4 caracteres'
         }
     }),
     password : Type.String({

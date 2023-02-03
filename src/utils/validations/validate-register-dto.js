@@ -15,11 +15,11 @@ addErrors(ajv)
 const registerSchema = Type.Object({
     username : Type.String({
         maxLength: 16,
-        minLength: 5,
+        minLength: 4,
         errorMessage: {
             type: 'username debe ser de tipo String',
             maxLength: 'username debe tener un máximo de 16 caracteres',
-            minLength: 'username debe tener un mínimo de 5 caracteres'
+            minLength: 'username debe tener un mínimo de 4 caracteres'
         }
     }),
     password: Type.String({

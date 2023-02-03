@@ -17,9 +17,9 @@ import session from "express-session";
 import MySQLStore from "express-mysql-session";
 import flash from 'connect-flash'
 import indexRouter from './routes/index.routes.js'
-import authRouter from './routes/auth.routes.js'
-import homeRouter from './routes/home.routes.js'
-import todoRouter from './routes/to-do.routes.js'
+// import authRouter from './routes/auth.routes.js'
+// import homeRouter from './routes/home.routes.js'
+// import todoRouter from './routes/to-do.routes.js'
 
 import options from './config/keys.js'
 // import pool from 'mysql2/promise'
@@ -27,27 +27,14 @@ import {pool} from './config/db.js'
 
 
 
-
-
-
-
-
-
 const PORT = process.env.PORT || 8080
 const MySQLStorage = MySQLStore(session)
-
-
-
-
 
 
 export const sessionStore = new MySQLStorage({...options, createDatabaseTable: true}, pool)
 
 // create express application
 const app = express();
-
-
-
 
 
 // motor engine
@@ -84,25 +71,19 @@ app.use( (req, res, next) => {
 
 
 
-
-
-
-
 // static files
 app.use(express.static(join(__dirname, "public")));
 
 
 //routes
 app.use(indexRouter)
-app.use(authRouter)
-app.use(homeRouter)
-app.use(todoRouter)
+// app.use(authRouter)
+// app.use(homeRouter)
+// app.use(todoRouter)
 
 process.on('warning', e => console.warn(e.stack));
 
 app.listen(PORT, ()=> {
-
-
     console.log("server listen on port " + PORT)
 })
 

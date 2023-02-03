@@ -58,11 +58,22 @@
     {
         flex: .5;
         margin-left: 5px;
+
+        text-transform: capitalize;
+
+        &:last-child
+        {
+            padding-bottom: 0;
+        }
+
+        &::before
+        {
+            content: '\25CF';
+            color: #FFF;
+            font-size: 16px;
+        }
     }
-    &__message:last-child
-    {
-        padding-bottom: 0;
-    }
+  
 
     &::after
     {
