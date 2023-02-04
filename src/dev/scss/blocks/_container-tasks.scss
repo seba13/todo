@@ -19,20 +19,108 @@
             left: 10px;
             font-size: 24px;
             position: absolute;
-            opacity: .6;
+            // opacity: .6;
             transform: translateY(-50%);
+            cursor: pointer;
         }
 
-        input {
+        button {
             padding-left: 40px;
             width: 100%;
             height: 40px;
             border: none;
             outline: none;
             border-radius: 12px;
+            color: rgba(242, 177, 46, 0.607);
+            cursor: pointer;
+            // position: relative;
+        }
 
-            &::placeholder {
-                opacity: .6;
+        .task__form-insert
+        {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            z-index: 500;
+            background-color: #182D3E;
+            width: 90%;
+            max-width: 400px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translate(-50%) scale(1);
+            transition: transform .25s ease;
+            border-radius: 20px;
+            
+            .task__form__close
+            {
+                position: absolute;
+                top: 20px;
+                right: 40px;
+            }
+
+            .task__form__wrapper
+            {
+                display: flex;
+                width: 100%;
+                padding-bottom: 1rem;
+                justify-content: space-around;
+                
+                label
+                {
+                    flex: 1;
+                    font-weight: 500;
+                    margin-left: 2rem;
+                    // margin-right: .rem;
+                    color: #fff;
+                }
+                input
+                {
+                    // width: 180px;
+                    // margin-right: 3rem;
+                    background-color: transparent;
+                    border: none;
+                    border-bottom: 1px solid #FF5400;
+                    color: #F2B02E;
+                    outline: none;
+
+                    &::placeholder
+                    {
+                        color: rgba(242, 177, 46, 0.604);
+                    }
+                    
+                }
+                
+                &:nth-child(2)
+                {
+                    margin-top: 3rem;
+                }
+
+                &:last-child
+                {
+                    margin-top: 2rem;
+                    
+                    
+                    input
+                    {
+                        margin: 0;
+                        border-bottom: none;
+                        color: #FF5400;
+                        font-weight: bold;
+                        font-size: 1.3rem;
+                        padding: 1rem 2rem;
+                        border-radius: 15px;
+                        background-color: #FFF;
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            &--hidden
+            {
+                transform: translate(-50%) scale(0);
             }
         }
     }
@@ -42,8 +130,18 @@
         height: 100%;
         background-color: rgba(217, 217, 217, 0.1);
         border-radius: 30px;
-
+        width: 100%;
         .task-list {
+
+
+            input[type="text"]
+            {
+                border: none;
+                border-radius: 15px;
+                background-color: transparent;
+                outline: none;
+            }
+
             width: 100%;
             margin-top: 12px;
             min-height: 300px;
@@ -134,15 +232,27 @@
                                 iconify-icon {
                                     font-size: 30px;
 
-                                    &[icon="material-symbols:edit-document"] {
+                                    &[icon="material-symbols:edit-document"],
+                                    &[icon="material-symbols:save-as"] 
+                                    {
                                         color: #ff5400;
+                                        cursor: pointer;
                                     }
 
                                     &[icon="material-symbols:delete-forever-rounded"] {
                                         color: #D62828;
+                                        cursor: pointer;
                                     }
 
+
+
                                 }
+
+                                &--hidden
+                                {
+                                    display: none;
+                                }
+
 
 
                                 .checkbox-wrapper {
@@ -161,7 +271,7 @@
                                         border-radius: 15px;
                                         position: relative;
                                         transition: border-color .2s ease;
-
+                                        cursor: pointer;
 
                                         // span
                                         .circle {

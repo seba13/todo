@@ -15,6 +15,8 @@ var tasksDone = document.getElementById('tasks-done');
 var taskPending = document.getElementById("tasks-pending");
 var buttonLeft = document.getElementById("button-left");
 var buttonRight = document.getElementById("button-right");
+var buttonNewTask = document.querySelector(".task__input-insert");
+var modalForm = buttonNewTask.querySelector('.task__form-insert');
 var inputInfo = {
   total: checkboxInputs.length,
   getInputDone: function getInputDone() {
@@ -36,7 +38,8 @@ var inputInfo = {
     return countPending;
   }
 };
-
+buttonNewTask.addEventListener('click', modalNewTask);
+modalForm.addEventListener('submit', addNewTask);
 // funcionalidad modal options
 containerTask.addEventListener('click', toggleOptionsModal);
 containerTask.addEventListener("change", updateInfo);
@@ -70,6 +73,40 @@ buttonRight.addEventListener("click", function () {
     behavior: "smooth"
   });
 });
+function modalNewTask(e) {
+  if (e.target.classList.contains("new-task") || e.target.getAttribute('icon')) {
+    if (modalForm) {
+      modalForm.classList.toggle('task__form-insert--hidden');
+    }
+  }
+}
+function addNewTask(e) {
+  e.preventDefault();
+  modalForm.classList.toggle('task__form-insert--hidden');
+  var inputTitle = document.getElementById('title-task');
+  var inputDescription = document.getElementById('description-task');
+
+  // /to-do/newtask
+
+  var data = {
+    nombre: inputTitle.value,
+    descripcion: inputDescription.value
+  };
+  fetch('to-do/newtask', {
+    headers: {
+      "Content-Type": 'application/json'
+    },
+    method: "POST",
+    body: JSON.stringify(data)
+  }).then(function (res) {
+    return res.json();
+  }).then(function (json) {
+    console.log(json);
+  });
+  console.log("enviando----");
+  inputTitle.value = "";
+  inputDescription.value = "";
+}
 function toggleOptionsModal(e) {
   // btn para abrir/cerrar modal
   if (e.target.closest('[icon="fluent:options-20-filled"] ')) {
@@ -95,6 +132,19 @@ function toggleOptionsModal(e) {
     }
     var _tasklistOptions = btnClose.parentElement;
     _tasklistOptions.classList.add("task-list__options__btn--hidden");
+  } else if (e.target.getAttribute('icon') === 'material-symbols:edit-document' || e.target.getAttribute("icon") === "material-symbols:save-as") {
+    if (e.target.getAttribute('icon') === "material-symbols:edit-document") {
+      e.target.parentElement.classList.toggle("task-list__icon--hidden");
+      e.target.parentElement.nextElementSibling.classList.toggle("task-list__icon--hidden");
+    } else {
+      // se procede a guardar
+
+      console.log("guardando....");
+      e.target.parentElement.classList.toggle("task-list__icon--hidden");
+      e.target.parentElement.previousElementSibling.classList.toggle("task-list__icon--hidden");
+    }
+  } else if (e.target.getAttribute('icon') === 'material-symbols:delete-forever-rounded') {
+    console.log("eliminado....");
   }
 }
 function updateInfo(e) {
@@ -102,6 +152,7 @@ function updateInfo(e) {
   if (e.target.getAttribute('type') == 'checkbox') {
     updateTasksDone();
     updateTasksPending();
+    console.log("guardando estado....");
   }
 }
 function updateTasksDone() {

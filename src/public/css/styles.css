@@ -1230,38 +1230,130 @@ input::placeholder {
   left: 10px;
   font-size: 24px;
   position: absolute;
-  opacity: 0.6;
   -webkit-transform: translateY(-50%);
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
+  cursor: pointer;
 }
-.container-tasks .task__input-insert input {
+.container-tasks .task__input-insert button {
   padding-left: 40px;
   width: 100%;
   height: 40px;
   border: none;
   outline: none;
   border-radius: 12px;
+  color: rgba(242, 177, 46, 0.607);
+  cursor: pointer;
 }
-.container-tasks .task__input-insert input::-webkit-input-placeholder {
-  opacity: 0.6;
+.container-tasks .task__input-insert .task__form-insert {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  z-index: 500;
+  background-color: #182D3E;
+  width: 90%;
+  max-width: 400px;
+  height: 300px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-transform: translate(-50%) scale(1);
+      -ms-transform: translate(-50%) scale(1);
+          transform: translate(-50%) scale(1);
+  -webkit-transition: -webkit-transform 0.25s ease;
+  transition: -webkit-transform 0.25s ease;
+  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+  border-radius: 20px;
 }
-.container-tasks .task__input-insert input::-moz-placeholder {
-  opacity: 0.6;
+.container-tasks .task__input-insert .task__form-insert .task__form__close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
 }
-.container-tasks .task__input-insert input:-ms-input-placeholder {
-  opacity: 0.6;
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  padding-bottom: 1rem;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
 }
-.container-tasks .task__input-insert input::-ms-input-placeholder {
-  opacity: 0.6;
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper label {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  font-weight: 500;
+  margin-left: 2rem;
+  color: #fff;
 }
-.container-tasks .task__input-insert input::placeholder {
-  opacity: 0.6;
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #FF5400;
+  color: #F2B02E;
+  outline: none;
+}
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper input::-webkit-input-placeholder {
+  color: rgba(242, 177, 46, 0.604);
+}
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper input::-moz-placeholder {
+  color: rgba(242, 177, 46, 0.604);
+}
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper input:-ms-input-placeholder {
+  color: rgba(242, 177, 46, 0.604);
+}
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper input::-ms-input-placeholder {
+  color: rgba(242, 177, 46, 0.604);
+}
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper input::placeholder {
+  color: rgba(242, 177, 46, 0.604);
+}
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper:nth-child(2) {
+  margin-top: 3rem;
+}
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper:last-child {
+  margin-top: 2rem;
+}
+.container-tasks .task__input-insert .task__form-insert .task__form__wrapper:last-child input {
+  margin: 0;
+  border-bottom: none;
+  color: #FF5400;
+  font-weight: bold;
+  font-size: 1.3rem;
+  padding: 1rem 2rem;
+  border-radius: 15px;
+  background-color: #FFF;
+  cursor: pointer;
+}
+.container-tasks .task__input-insert .task__form-insert--hidden {
+  -webkit-transform: translate(-50%) scale(0);
+      -ms-transform: translate(-50%) scale(0);
+          transform: translate(-50%) scale(0);
 }
 .container-tasks .task__wrapper {
   height: 100%;
   background-color: rgba(217, 217, 217, 0.1);
   border-radius: 30px;
+  width: 100%;
 }
 .container-tasks .task__wrapper .task-list {
   width: 100%;
@@ -1287,6 +1379,12 @@ input::placeholder {
   -webkit-scroll-snap-type: x mandatory;
       -ms-scroll-snap-type: x mandatory;
           scroll-snap-type: x mandatory;
+}
+.container-tasks .task__wrapper .task-list input[type=text] {
+  border: none;
+  border-radius: 15px;
+  background-color: transparent;
+  outline: none;
 }
 @media screen and (min-width: 769px) {
   .container-tasks .task__wrapper .task-list {
@@ -1406,11 +1504,16 @@ input::placeholder {
 .container-tasks .task__wrapper .task-list__wrapper .task-list__element .task-list__options .task-list__options__btn .task-list__icon iconify-icon {
   font-size: 30px;
 }
-.container-tasks .task__wrapper .task-list__wrapper .task-list__element .task-list__options .task-list__options__btn .task-list__icon iconify-icon[icon="material-symbols:edit-document"] {
+.container-tasks .task__wrapper .task-list__wrapper .task-list__element .task-list__options .task-list__options__btn .task-list__icon iconify-icon[icon="material-symbols:edit-document"], .container-tasks .task__wrapper .task-list__wrapper .task-list__element .task-list__options .task-list__options__btn .task-list__icon iconify-icon[icon="material-symbols:save-as"] {
   color: #ff5400;
+  cursor: pointer;
 }
 .container-tasks .task__wrapper .task-list__wrapper .task-list__element .task-list__options .task-list__options__btn .task-list__icon iconify-icon[icon="material-symbols:delete-forever-rounded"] {
   color: #D62828;
+  cursor: pointer;
+}
+.container-tasks .task__wrapper .task-list__wrapper .task-list__element .task-list__options .task-list__options__btn .task-list__icon--hidden {
+  display: none;
 }
 .container-tasks .task__wrapper .task-list__wrapper .task-list__element .task-list__options .task-list__options__btn .task-list__icon .checkbox-wrapper {
   height: 100%;
@@ -1441,6 +1544,7 @@ input::placeholder {
   position: relative;
   -webkit-transition: border-color 0.2s ease;
   transition: border-color 0.2s ease;
+  cursor: pointer;
 }
 .container-tasks .task__wrapper .task-list__wrapper .task-list__element .task-list__options .task-list__options__btn .task-list__icon .checkbox-wrapper label .circle {
   display: block;

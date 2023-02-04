@@ -9,6 +9,9 @@ let taskPending = document.getElementById("tasks-pending")
 let buttonLeft = document.getElementById("button-left")
 let buttonRight = document.getElementById("button-right")
 
+let buttonNewTask = document.querySelector(".task__input-insert")
+let modalForm = buttonNewTask.querySelector('.task__form-insert')
+
 let inputInfo = {
 
     total: checkboxInputs.length,
@@ -36,10 +39,12 @@ let inputInfo = {
     }
 }
 
-
-
+buttonNewTask.addEventListener('click', modalNewTask)
+modalForm.addEventListener('submit', addNewTask)
 // funcionalidad modal options
 containerTask.addEventListener('click', toggleOptionsModal)
+
+
 
 containerTask.addEventListener("change", updateInfo)
 
@@ -78,6 +83,56 @@ buttonRight.addEventListener("click", ()=> {
     })
 })
 
+
+
+function modalNewTask(e) {
+
+
+    if(e.target.classList.contains("new-task") || e.target.getAttribute('icon')){
+
+        if(modalForm){
+
+            modalForm.classList.toggle('task__form-insert--hidden')
+        }
+    }
+
+
+}
+
+function addNewTask(e) {
+    e.preventDefault()
+
+    modalForm.classList.toggle('task__form-insert--hidden')
+
+    let inputTitle = document.getElementById('title-task')
+    let inputDescription = document.getElementById('description-task')
+
+        
+    // /to-do/newtask
+    
+    let data = {
+        nombre: inputTitle.value,
+        descripcion: inputDescription.value,
+    }
+
+    fetch('to-do/newtask', {
+
+        headers: {
+            "Content-Type": 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify(data),
+
+    })
+    .then(res => res.json())
+    .then(json => {
+        console.log(json);
+    })
+    console.log("enviando----");
+
+    inputTitle.value = ""
+    inputDescription.value = ""
+}
 
 
 
@@ -121,7 +176,33 @@ function toggleOptionsModal(e) {
             let tasklistOptions = btnClose.parentElement
 
             tasklistOptions.classList.add("task-list__options__btn--hidden")
-    
+        }
+        else 
+        if(e.target.getAttribute('icon') === 'material-symbols:edit-document' || e.target.getAttribute("icon") === "material-symbols:save-as"){
+
+            if(e.target.getAttribute('icon') ==="material-symbols:edit-document"){
+
+                e.target.parentElement.classList.toggle("task-list__icon--hidden")
+
+                e.target.parentElement.nextElementSibling.classList.toggle("task-list__icon--hidden")
+
+            }else
+            {
+
+                // se procede a guardar
+
+                console.log("guardando....");
+
+                e.target.parentElement.classList.toggle("task-list__icon--hidden")
+
+                e.target.parentElement.previousElementSibling.classList.toggle("task-list__icon--hidden")
+            }
+
+        }
+        else
+        if(e.target.getAttribute('icon') === 'material-symbols:delete-forever-rounded')
+        {
+            console.log("eliminado....");
         }
     
 }
@@ -137,6 +218,9 @@ function updateInfo(e) {
         
         updateTasksDone()
         updateTasksPending()
+
+
+        console.log("guardando estado....");
     }
 
 }
