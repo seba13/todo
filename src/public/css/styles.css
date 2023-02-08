@@ -347,6 +347,16 @@ template {
   box-sizing: border-box;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #F2B02E;
+  font-size: inherit;
+}
+
 body {
   font-family: "Gilroy";
   font-weight: 800;

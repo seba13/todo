@@ -40,32 +40,45 @@ export const NewTaskCtrl = async(req, res) => {
 
 
 
-    const idTask = await saveTask({idUser: req.session.userId,...req.body})
+    const insertTask = await saveTask({idUser: req.session.userId,...req.body})
 
-    console.log(idTask);
+    
 
+    if(insertTask.idTask) {
 
-    return res.json({
-        message: "recibido",
-        idTask,
-    })
+        return res.json({
+            message: "Tarea agregada con éxito",
+            ...insertTask
+        })
+    }
+    else 
+    {
+        return res.status(400).json({
+            message: "error al procesar tarea",
+        })
+    }
+
+    
+   
 }
 
 export const modifyTaskCtrl = async(req, res) => {
 
 
     const result = await modifyTask(req.body)
-    return res.status(204).json({message: "tarea actualizada", result})
+    return res.status(200).json({message: "tarea actualizada", result})
 
 }
 
 export const modifyStatusTaskCtrl = async(req, res) => {
 
+    console.log(req.body);
 
     const result = await modifyStatusTask(req.body)
 
 
-    return res.status(204).json({message: "tarea actualizada", result})
+    
+    return res.status(200).json({message: "tarea actualizada", result})
 }
 
 
@@ -74,6 +87,13 @@ export const eliminateTaskCtrl = async(req, res) => {
     const result = await eliminateTask(req.body)
 
 
-    return res.status(202).json({message: "tarea eliminada", result})
+    if(result.affectedRows == 1) {
+        
+        return res.status(202).json({message: "tarea eliminada", result})
+    }else
+    {
+        return res.status(400).send()
+    }
+
 
 }

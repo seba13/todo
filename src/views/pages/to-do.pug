@@ -21,32 +21,68 @@ block to-do
                     input(type="submit", value="Agregar tarea")
         .task__wrapper
             .task-list#task-list
-                .task-list__wrapper
-                    .task-list__element
-                        input(type="text" name="nombre" value="Estudiar nueva Tecnologia" readonly).task-list__title 
-                        input(type="text" name="descripcion" value="estudiar tecnologia de json web token" readonly).task-list__description 
-                    .task-list__element
-                        .task-list__options
-                            iconify-icon(icon="fluent:options-20-filled")
-                            .task-list__options__btn.task-list__options__btn--hidden
-                                .task-list__icon--close
-                                    iconify-icon.btn__close-options(icon="material-symbols:close")
-                                .task-list__icon
-                                    iconify-icon(icon="material-symbols:edit-document")
-                                    span Editar
-                                .task-list__icon.task-list__icon--hidden
-                                    iconify-icon(icon="material-symbols:save-as")
-                                    span Guardar
-                                .task-list__icon
-                                    .checkbox-wrapper
-                                        input#checkbox(type="checkbox", name="estado" checked value="done") 
-                                        label(for="checkbox") 
-                                            span.circle
-                                        span Realizado
+                each task in tasks
+                    .task-list__wrapper(data-id=task.id_task)
+                        .task-list__element
+                            input(type="text" name="nombre" value=task.nombre readonly).task-list__title
+                            input(type="text" name="descripcion" value=task.descripcion readonly).task-list__description
+                        .task-list__element
+                            .task-list__options
+                                iconify-icon(icon="fluent:options-20-filled")
+                                .task-list__options__btn.task-list__options__btn--hidden
+                                    .task-list__icon--close
+                                        iconify-icon.btn__close-options(icon="material-symbols:close")
+                                    .task-list__icon
+                                        iconify-icon(icon="material-symbols:edit-document")
+                                        span Editar
+                                    .task-list__icon.task-list__icon--hidden
+                                        iconify-icon(icon="material-symbols:save-as")
+                                        span Guardar
+                                    .task-list__icon
+                                        .checkbox-wrapper
+                                            input(type="checkbox", id=task.id_task name="estado" checked=task.estado? true: false value="done") 
+                                            label(for=task.id_task) 
+                                                span.circle
+                                            span= task.estado? 'Realizada' : 'Pendiente'
+                                        
+                                    .task-list__icon
+                                        iconify-icon(icon="material-symbols:delete-forever-rounded")
+                                        span Eliminar
+
+
+
+
+
+
+
+
+
+                //- .task-list__wrapper
+                //-     .task-list__element
+                //-         input(type="text" name="nombre" value="Estudiar nueva Tecnologia" readonly).task-list__title 
+                //-         input(type="text" name="descripcion" value="estudiar tecnologia de json web token" readonly).task-list__description 
+                //-     .task-list__element
+                //-         .task-list__options
+                //-             iconify-icon(icon="fluent:options-20-filled")
+                //-             .task-list__options__btn.task-list__options__btn--hidden
+                //-                 .task-list__icon--close
+                //-                     iconify-icon.btn__close-options(icon="material-symbols:close")
+                //-                 .task-list__icon
+                //-                     iconify-icon(icon="material-symbols:edit-document")
+                //-                     span Editar
+                //-                 .task-list__icon.task-list__icon--hidden
+                //-                     iconify-icon(icon="material-symbols:save-as")
+                //-                     span Guardar
+                //-                 .task-list__icon
+                //-                     .checkbox-wrapper
+                //-                         input#checkbox(type="checkbox", name="estado" checked value="done") 
+                //-                         label(for="checkbox") 
+                //-                             span.circle
+                //-                         span Realizado
                                     
-                                .task-list__icon
-                                    iconify-icon(icon="material-symbols:delete-forever-rounded")
-                                    span Eliminar
+                //-                 .task-list__icon
+                //-                     iconify-icon(icon="material-symbols:delete-forever-rounded")
+                //-                     span Eliminar
                
 
 
