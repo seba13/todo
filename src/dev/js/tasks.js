@@ -538,7 +538,7 @@ function createTask(data) {
     spanButtonCheckbox.classList.add("circle")
 
     let spanText = document.createElement("span")
-    spanText.textContent = data.idTask ? 'Realizado' : 'Pendiente'
+    spanText.textContent = inputCheckbox.checked ? 'Realizado' : 'Pendiente'
 
     labelCheckbox.append(spanButtonCheckbox)
 
