@@ -215,6 +215,8 @@ function toggleOptionsModal(e) {
                 saveTask(nombre.value, descripcion.value, idTask)
                 
 
+                createModalMessage({flag: true, title: "Actualizar tarea", message: "Tarea actualizada con éxito"})
+
             }
 
         }
@@ -257,6 +259,7 @@ function updateInfo(e) {
 
 
         saveStatus(e.target.getAttribute('id'), e.target.checked)
+        createModalMessage({flag: true, title: "Actualizar tarea", message: "Estado de tarea Actualizado con Éxito"})
     }
 
 }
@@ -351,6 +354,7 @@ function saveStatus(id, status) {
     })
     .then(res => res.json())
     .then(json => {
+        
         console.log(json);
     })
 
@@ -387,6 +391,7 @@ function deleteTask(idTask) {
 
         let wrapperTask = document.querySelector(` .task-list__wrapper[data-id='${idTask}']`)
         wrapperTask.remove()
+        createModalMessage({flag: true, title: "Eliminar tarea", message: "Tarea Eliminada con Éxito"})
         updateTasksDone()
         updateTasksPending()
         createDockPage()
@@ -405,6 +410,7 @@ function updateTasksList(data) {
 
 
         taskList.append(createTask(data))
+        createModalMessage({flag: true, title: "Agregar Tarea", message: "Tarea Creada con Éxito"})
         updateTasksDone()
         updateTasksPending()
         createDockPage()

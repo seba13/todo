@@ -145,6 +145,11 @@ function toggleOptionsModal(e) {
       var descripcion = e.target.closest('.task-list__wrapper').firstElementChild.lastElementChild;
       var idTask = e.target.closest(".task-list__wrapper").dataset.id;
       saveTask(nombre.value, descripcion.value, idTask);
+      createModalMessage({
+        flag: true,
+        title: "Actualizar tarea",
+        message: "Tarea actualizada con éxito"
+      });
     }
   } else if (e.target.getAttribute('icon') === 'material-symbols:delete-forever-rounded') {
     console.log("eliminado....");
@@ -162,6 +167,11 @@ function updateInfo(e) {
     updateTexttask(spanText, e.target);
     console.log("guardando estado....");
     saveStatus(e.target.getAttribute('id'), e.target.checked);
+    createModalMessage({
+      flag: true,
+      title: "Actualizar tarea",
+      message: "Estado de tarea Actualizado con Éxito"
+    });
   }
 }
 function addNewTask(e) {
@@ -256,6 +266,11 @@ function deleteTask(idTask) {
     console.log("acaa");
     var wrapperTask = document.querySelector(" .task-list__wrapper[data-id='".concat(idTask, "']"));
     wrapperTask.remove();
+    createModalMessage({
+      flag: true,
+      title: "Eliminar tarea",
+      message: "Tarea Eliminada con Éxito"
+    });
     updateTasksDone();
     updateTasksPending();
     createDockPage();
@@ -267,6 +282,11 @@ function updateTasksList(data) {
   console.log(data);
   if (data.op === 'append') {
     taskList.append(createTask(data));
+    createModalMessage({
+      flag: true,
+      title: "Agregar Tarea",
+      message: "Tarea Creada con Éxito"
+    });
     updateTasksDone();
     updateTasksPending();
     createDockPage();
