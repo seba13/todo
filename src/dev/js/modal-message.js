@@ -21,7 +21,7 @@ function createModalMessage(data){
 
     let modalMessage = document.createElement('div')
     
-    modalMessage.classList.add('modal-message', data.flag ? 'modal-message--succes' : 'modal-message--error')
+    modalMessage.classList.add('modal-message', data.flag ? 'modal-message--success' : 'modal-message--error')
 
     let modalMessageTitle = document.createElement('p')
     modalMessageTitle.classList.add('modal-message__title')

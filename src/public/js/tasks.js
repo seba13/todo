@@ -368,7 +368,9 @@ function createTask(data) {
   var spanButtonCheckbox = document.createElement("span");
   spanButtonCheckbox.classList.add("circle");
   var spanText = document.createElement("span");
-  spanText.textContent = data.idTask ? 'Realizado' : 'Pendiente';
+  console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  console.log(data.estado);
+  spanText.textContent = inputCheckbox.checked ? 'Realizado' : 'Pendiente';
   labelCheckbox.append(spanButtonCheckbox);
   checkboxWrapper.append(inputCheckbox);
   checkboxWrapper.append(labelCheckbox);

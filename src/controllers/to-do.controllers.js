@@ -48,6 +48,7 @@ export const NewTaskCtrl = async(req, res) => {
 
         return res.json({
             message: "Tarea agregada con éxito",
+            estado: 0,
             ...insertTask
         })
     }
