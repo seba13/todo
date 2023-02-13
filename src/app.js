@@ -81,7 +81,7 @@ app.use(indexRouter)
 // app.use(homeRouter)
 // app.use(todoRouter)
 
-process.on('warning', e => console.warn(e.stack));
+// process.on('warning', e => console.warn(e.stack));
 
 app.listen(PORT, ()=> {
     console.log("server listen on port " + PORT)

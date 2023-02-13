@@ -1,4 +1,75 @@
+import multer from 'multer'
+import {dirname, extname, join} from 'path'
+import { fileURLToPath } from 'url'
+import {removeLogoUser} from '../utils/remove-logo-user.js'
 
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+
+const MIMETYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]
+
+
+
+const configStorage =  multer.diskStorage({
+    destination: (req, file, cb)=>{
+
+        const fileExtension = extname(file.originalname)
+        const fileName = "user-"+req.session.userId 
+
+        removeLogoUser(fileName)
+        cb(null, join(__dirname, '../public/uploads'))
+
+    },
+    filename: (req, file, cb) => {
+
+        const fileExtension = extname(file.originalname)
+        const fileName = "user-"+req.session.userId 
+        cb(null, fileName+fileExtension)
+    }
+})
+
+
+
+
+const multerUpload = multer({
+    storage: configStorage,
+    // dest: join(__dirname, '../public/uploads'),
+    fileFilter: (req, file, cb) => {
+
+        console.log(file);
+
+        if(MIMETYPES.includes(file.mimetype)){
+            return cb(null, true)
+        }else {
+            cb('formato de archivo invalido');
+        }
+    },
+    // limits: {
+    //     fileSize: 1 * 1024 * 1024 * 10
+    // }
+})
+
+
+
+export const errorUpload = ((err, req, res , next) => {
+
+    if(err) {
+
+        console.log(err);
+
+        res.status(400).send({
+            error: 'error al subir archivo'
+        })
+    }else {
+        next()
+    }
+
+})
+
+
+export const middlewareMulter = multerUpload.single('logo-user')
 
 
 

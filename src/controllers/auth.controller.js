@@ -172,7 +172,7 @@ export const logout = (req, res) => {
             console.log("entra en logout 3");
             return res.redirect('/')
         }
-        console.log("aca3");
+
         // sessionStore.close()
 
 

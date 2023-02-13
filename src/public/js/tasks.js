@@ -46,11 +46,15 @@ var inputInfo = {
     return countPending;
   }
 };
+Sortable.create(taskList, {
+  handle: '.move-task',
+  animation: 150
+});
 buttonNewTask.addEventListener('click', modalNewTask);
 modalForm.addEventListener('submit', addNewTask);
 // funcionalidad modal options
 containerTask.addEventListener('click', toggleOptionsModal);
-containerTask.addEventListener("change", updateInfo);
+containerTask.addEventListener("change", updateStatus);
 
 // Agregar info task
 tasksDone.addEventListener('load', updateTasksDone());
@@ -92,15 +96,12 @@ function toggleOptionsModal(e) {
   // btn para abrir/cerrar modal
   if (e.target.closest('[icon="fluent:options-20-filled"] ')) {
     var taskListOptions = e.target.nextElementSibling;
-    console.log(e.target);
-    console.log(taskListOptions);
 
     // previniendo que se abra mas de un modal
     // capturando todos los elementos que si estan visibles
     // se les agrega la clase hidden para ocultarlos
     // solo se le quita al elemento que se ha hecho click
     containerTask.querySelectorAll('.task-list__options__btn:not(.task-list__options__btn--hidden)').forEach(function (taskOptionsEl) {
-      console.log("entra aca");
       taskOptionsEl.classList.add("task-list__options__btn--hidden");
     });
 
@@ -127,7 +128,6 @@ function toggleOptionsModal(e) {
     _iconSave.classList.add("task-list__icon--hidden");
     var _iconEdit = e.target.closest(".task-list__options").querySelector("[icon='material-symbols:edit-document']").parentElement;
     _iconEdit.classList.remove("task-list__icon--hidden");
-    console.log(_iconSave);
   } else if (e.target.getAttribute('icon') === 'material-symbols:edit-document' || e.target.getAttribute("icon") === "material-symbols:save-as") {
     if (e.target.getAttribute('icon') === "material-symbols:edit-document") {
       e.target.parentElement.classList.toggle("task-list__icon--hidden");
@@ -138,40 +138,33 @@ function toggleOptionsModal(e) {
     } else {
       // se procede a guardar
 
-      console.log("guardando....");
       e.target.parentElement.classList.toggle("task-list__icon--hidden");
       e.target.parentElement.previousElementSibling.classList.toggle("task-list__icon--hidden");
       var nombre = e.target.closest('.task-list__wrapper').firstElementChild.firstElementChild;
       var descripcion = e.target.closest('.task-list__wrapper').firstElementChild.lastElementChild;
       var idTask = e.target.closest(".task-list__wrapper").dataset.id;
       saveTask(nombre.value, descripcion.value, idTask);
-      createModalMessage({
-        flag: true,
-        title: "Actualizar tarea",
-        message: "Tarea actualizada con éxito"
-      });
     }
   } else if (e.target.getAttribute('icon') === 'material-symbols:delete-forever-rounded') {
-    console.log("eliminado....");
+    // Eliminando ...
+
     var _idTask = e.target.closest(".task-list__wrapper").dataset.id;
     deleteTask(_idTask);
   }
 }
-function updateInfo(e) {
+function updateStatus(e) {
   checkboxInputs = containerTask.querySelectorAll("input[type='checkbox']");
   if (e.target.getAttribute('type') == 'checkbox') {
     var spanText = e.target.parentElement.lastElementChild;
-    console.log(spanText);
-    updateTasksDone();
-    updateTasksPending();
-    updateTexttask(spanText, e.target);
-    console.log("guardando estado....");
-    saveStatus(e.target.getAttribute('id'), e.target.checked);
-    createModalMessage({
-      flag: true,
-      title: "Actualizar tarea",
-      message: "Estado de tarea Actualizado con Éxito"
+
+    // Modifica el dom
+    updateTasksList({
+      op: 'update',
+      spanText: spanText,
+      checkbox: e.target
     });
+    // modifca bd
+    saveStatus(e.target.getAttribute('id'), e.target.checked);
   }
 }
 function addNewTask(e) {
@@ -193,18 +186,18 @@ function addNewTask(e) {
     method: "POST",
     body: JSON.stringify(data)
   }).then(function (res) {
-    if (res.status == 200) return res.json();else throw new Error('Something went wrong');
+    if (res.ok) return res.json();else throw new Error('Error al agregar Tarea');
   }).then(function (json) {
-    console.log({
-      json: json
-    });
     updateTasksList(_objectSpread({
       op: 'append'
     }, json));
-  })["catch"](function (error) {
-    console.log("hola");
+  })["catch"](function (err) {
+    createModalMessage({
+      flag: false,
+      title: "Nueva Tarea",
+      message: err.message
+    });
   });
-  console.log("enviando----");
   inputTitle.value = "";
   inputDescription.value = "";
 }
@@ -221,9 +214,21 @@ function saveTask(nombre, descripcion, idTask) {
     method: "PATCH",
     body: JSON.stringify(data)
   }).then(function (res) {
-    return res.json();
-  }).then(function (json) {
-    console.log(json);
+    if (res.ok) {
+      createModalMessage({
+        flag: true,
+        title: "Actualizar tarea",
+        message: "Tarea actualizada con éxito"
+      });
+    } else {
+      throw new Error('Error al actualizar tarea');
+    }
+  })["catch"](function (err) {
+    createModalMessage({
+      flag: false,
+      title: "Actualizar Tarea",
+      message: err.message
+    });
   });
 }
 function saveStatus(id, status) {
@@ -239,9 +244,21 @@ function saveStatus(id, status) {
     method: "PATCH",
     body: JSON.stringify(data)
   }).then(function (res) {
-    return res.json();
-  }).then(function (json) {
-    console.log(json);
+    if (res.ok) {
+      createModalMessage({
+        flag: true,
+        title: "Actualizar tarea",
+        message: "Estado de tarea Actualizado con Éxito"
+      });
+    } else {
+      throw new Error('Error al actualizar Tarea');
+    }
+  })["catch"](function (err) {
+    createModalMessage({
+      flag: false,
+      title: "Actualizar tarea",
+      message: err.message
+    });
   });
 }
 function deleteTask(idTask) {
@@ -256,30 +273,21 @@ function deleteTask(idTask) {
     body: JSON.stringify(data)
   }).then(function (res) {
     if (res.ok) {
-      return res.json();
+      updateTasksList(_objectSpread(_objectSpread({}, data), {}, {
+        op: 'delete'
+      }));
     } else {
       throw new Error('Error al eliminar tarea');
     }
-  }).then(function (json) {
-    // se procede a eliminar
-
-    console.log("acaa");
-    var wrapperTask = document.querySelector(" .task-list__wrapper[data-id='".concat(idTask, "']"));
-    wrapperTask.remove();
-    createModalMessage({
-      flag: true,
-      title: "Eliminar tarea",
-      message: "Tarea Eliminada con Éxito"
-    });
-    updateTasksDone();
-    updateTasksPending();
-    createDockPage();
   })["catch"](function (err) {
-    return console.log(err);
+    createModalMessage({
+      flag: false,
+      title: "Eliminar tarea",
+      message: err.message
+    });
   });
 }
 function updateTasksList(data) {
-  console.log(data);
   if (data.op === 'append') {
     taskList.append(createTask(data));
     createModalMessage({
@@ -287,10 +295,25 @@ function updateTasksList(data) {
       title: "Agregar Tarea",
       message: "Tarea Creada con Éxito"
     });
-    updateTasksDone();
-    updateTasksPending();
-    createDockPage();
   }
+  if (data.op === 'delete') {
+    createModalMessage({
+      flag: true,
+      title: "Eliminar tarea",
+      message: "Tarea Eliminada con Éxito"
+    });
+    var wrapperTask = document.querySelector(" .task-list__wrapper[data-id='".concat(data.idTask, "']"));
+    wrapperTask.classList.add('task-list__wrapper--hidden');
+    wrapperTask.addEventListener('transitionend', function (e) {
+      wrapperTask.remove();
+    });
+  }
+  if (data.op === 'update') {
+    updateTextStatus(data.spanText, data.checkbox);
+  }
+  updateTasksDone();
+  updateTasksPending();
+  createDockPage();
 }
 function createTask(data) {
   var taskListWrapper = document.createElement("div");
@@ -368,8 +391,6 @@ function createTask(data) {
   var spanButtonCheckbox = document.createElement("span");
   spanButtonCheckbox.classList.add("circle");
   var spanText = document.createElement("span");
-  console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-  console.log(data.estado);
   spanText.textContent = inputCheckbox.checked ? 'Realizado' : 'Pendiente';
   labelCheckbox.append(spanButtonCheckbox);
   checkboxWrapper.append(inputCheckbox);
@@ -386,7 +407,7 @@ function createTask(data) {
   taskListOptionsButtons.append(divDeleteIcon);
   return taskListWrapper;
 }
-function updateTexttask(span, checkbox) {
+function updateTextStatus(span, checkbox) {
   span.textContent = checkbox.checked ? 'Realizada' : 'Pendiente';
 }
 function updateTasksDone() {
@@ -433,12 +454,10 @@ function createDockPage() {
 }
 function selectDock(index) {
   var docks = document.querySelectorAll('.task-dock__circle');
-  console.log("entra acá");
   if (docks && docks.length > 0) {
     docks.forEach(function (dock) {
       dock.classList.remove("task-dock__circle--active");
     });
-    console.log(index);
     docks[index].classList.add("task-dock__circle--active");
   }
 }
@@ -453,8 +472,6 @@ function movePageAt(e) {
       if (dots && dots.length > 0) {
         nextIndex = dots.indexOf(selectedDot);
         currentIndex = dots.indexOf(currentDot);
-        console.log(nextIndex);
-        console.log(currentIndex);
         var desplazamiento = -1;
         var width = taskList.offsetWidth;
         if (nextIndex > currentIndex) {
@@ -472,7 +489,6 @@ function movePageAt(e) {
             behavior: "smooth"
           });
         }
-        console.log(desplazamiento);
       }
     }
   }

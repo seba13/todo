@@ -1,5 +1,5 @@
 import { getUser } from "./query/users/validityUser.js"
-
+import {updateLogoUser} from './query/users/updateUser.js'
 
 
 /**
@@ -50,3 +50,15 @@ export const renderHome = (req, res) => {
             })
     }
 }
+
+
+
+export const updateUserCtrl = ( (req, res) => {
+
+    if(req.file){
+        updateLogoUser({"logo-user": "./uploads/"+req.file.filename, idUser: req.session.userId})
+    }
+
+    return res.status(202).json({message: "Datos Actualizados con éxito"})
+
+})

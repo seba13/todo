@@ -56,7 +56,7 @@ function sassCompiler() {
 function watchTasks() {
 
     server.init({
-        proxy: '192.168.0.10:5000',
+        proxy: '192.168.0.16:5000',
         port: 80
     })
 

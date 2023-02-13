@@ -54,7 +54,7 @@ export const NewTaskCtrl = async(req, res) => {
     }
     else 
     {
-        return res.status(400).json({
+        return res.status(500).json({
             message: "error al procesar tarea",
         })
     }
@@ -67,7 +67,14 @@ export const modifyTaskCtrl = async(req, res) => {
 
 
     const result = await modifyTask(req.body)
-    return res.status(200).json({message: "tarea actualizada", result})
+    
+    if(result.affectedRows == 1) {
+        
+        return res.status(202).json({message: "tarea actualizada", result})
+    }else
+    {
+        return res.status(500).json({message: "Se produjo un error al actualizar tarea"})
+    }
 
 }
 
@@ -77,9 +84,15 @@ export const modifyStatusTaskCtrl = async(req, res) => {
 
     const result = await modifyStatusTask(req.body)
 
-
+    console.log(result);
     
-    return res.status(200).json({message: "tarea actualizada", result})
+    if(result.affectedRows == 1) {
+        
+        return res.status(202).json({message: "tarea actualizada", result})
+    }else
+    {
+        return res.status(500).json({message: "Se produjo un error al actualizar tarea"})
+    }
 }
 
 
@@ -87,13 +100,14 @@ export const eliminateTaskCtrl = async(req, res) => {
 
     const result = await eliminateTask(req.body)
 
+    console.log(result);
 
     if(result.affectedRows == 1) {
         
         return res.status(202).json({message: "tarea eliminada", result})
     }else
     {
-        return res.status(400).send()
+        return res.status(500).json({message: "Se produjo un error al eliminar tarea"})
     }
 
 

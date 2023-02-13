@@ -28,6 +28,7 @@ block to-do
                             input(type="text" name="descripcion" value=task.descripcion readonly).task-list__description
                         .task-list__element
                             .task-list__options
+                                iconify-icon.move-task(icon="mdi:cursor-move")
                                 iconify-icon(icon="fluent:options-20-filled")
                                 .task-list__options__btn.task-list__options__btn--hidden
                                     .task-list__icon--close
@@ -109,5 +110,5 @@ block to-do
                 iconify-icon(icon="material-symbols:chevron-left")
             .button-right#button-right
                 iconify-icon(icon="material-symbols:chevron-right")
-    
+    script(src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js")
     script(src="./js/tasks.js") 

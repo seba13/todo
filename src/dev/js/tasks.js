@@ -41,6 +41,15 @@ let inputInfo = {
     }
 }
 
+
+Sortable.create(taskList, {
+    handle: '.move-task',
+    animation: 150
+  });
+  
+
+
+
 buttonNewTask.addEventListener('click', modalNewTask)
 modalForm.addEventListener('submit', addNewTask)
 // funcionalidad modal options
@@ -48,7 +57,7 @@ containerTask.addEventListener('click', toggleOptionsModal)
 
 
 
-containerTask.addEventListener("change", updateInfo)
+containerTask.addEventListener("change", updateStatus)
 
 // Agregar info task
 tasksDone.addEventListener('load', updateTasksDone())
@@ -110,18 +119,12 @@ function toggleOptionsModal(e) {
             
             let taskListOptions = e.target.nextElementSibling
             
-
-            console.log(e.target);
-            console.log(taskListOptions);
-           
-
             // previniendo que se abra mas de un modal
             // capturando todos los elementos que si estan visibles
             // se les agrega la clase hidden para ocultarlos
             // solo se le quita al elemento que se ha hecho click
             containerTask.querySelectorAll('.task-list__options__btn:not(.task-list__options__btn--hidden)').forEach(taskOptionsEl => {
 
-                console.log("entra aca");
                 taskOptionsEl.classList.add("task-list__options__btn--hidden")
     
             })
@@ -169,8 +172,6 @@ function toggleOptionsModal(e) {
             let iconEdit = e.target.closest(".task-list__options").querySelector("[icon='material-symbols:edit-document']").parentElement
             iconEdit.classList.remove("task-list__icon--hidden")
 
-            console.log(iconSave);
-            
 
         }
         else 
@@ -196,8 +197,6 @@ function toggleOptionsModal(e) {
 
                 // se procede a guardar
 
-                console.log("guardando....");
-
                 e.target.parentElement.classList.toggle("task-list__icon--hidden")
 
                 e.target.parentElement.previousElementSibling.classList.toggle("task-list__icon--hidden")
@@ -215,7 +214,7 @@ function toggleOptionsModal(e) {
                 saveTask(nombre.value, descripcion.value, idTask)
                 
 
-                createModalMessage({flag: true, title: "Actualizar tarea", message: "Tarea actualizada con éxito"})
+               
 
             }
 
@@ -223,7 +222,7 @@ function toggleOptionsModal(e) {
         else
         if(e.target.getAttribute('icon') === 'material-symbols:delete-forever-rounded')
         {
-            console.log("eliminado....");
+            // Eliminando ...
 
             let idTask = e.target.closest(".task-list__wrapper").dataset.id
 
@@ -238,7 +237,7 @@ function toggleOptionsModal(e) {
 
 
 
-function updateInfo(e) {
+function updateStatus(e) {
 
  
     checkboxInputs = containerTask.querySelectorAll("input[type='checkbox']")
@@ -249,17 +248,11 @@ function updateInfo(e) {
         let spanText = e.target.parentElement.lastElementChild
 
 
-        console.log(spanText);
-
-        updateTasksDone()
-        updateTasksPending()
-        updateTexttask(spanText, e.target)
-
-        console.log("guardando estado....");
-
-
+        // Modifica el dom
+        updateTasksList({op: 'update', spanText, checkbox: e.target})
+        // modifca bd
         saveStatus(e.target.getAttribute('id'), e.target.checked)
-        createModalMessage({flag: true, title: "Actualizar tarea", message: "Estado de tarea Actualizado con Éxito"})
+        
     }
 
 }
@@ -295,17 +288,16 @@ function addNewTask(e) {
     })
     .then(res => {
 
-        if(res.status == 200) return res.json()
-        else throw new Error('Something went wrong');
+        if(res.ok) return res.json()
+        else throw new Error('Error al agregar Tarea');
     })
     .then(json => {
-        console.log({json});
+
         updateTasksList({op: 'append', ...json})
     })
-    .catch(error => {
-        console.log("hola");
+    .catch(err => {
+        createModalMessage({flag: false, title: "Nueva Tarea", message: err.message})
     })
-    console.log("enviando----");
 
     inputTitle.value = ""
     inputDescription.value = ""
@@ -327,9 +319,15 @@ function saveTask(nombre, descripcion, idTask) {
         body: JSON.stringify(data),
 
     })
-    .then(res => res.json())
-    .then(json => {
-        console.log(json);
+    .then(res => {
+        if(res.ok) {
+            createModalMessage({flag: true, title: "Actualizar tarea", message: "Tarea actualizada con éxito"})
+        }else 
+        {
+            throw new Error('Error al actualizar tarea')
+        }
+    }).catch(err => {
+        createModalMessage({flag: false, title: "Actualizar Tarea", message: err.message})
     })
 
 
@@ -352,11 +350,17 @@ function saveStatus(id, status) {
         body: JSON.stringify(data),
 
     })
-    .then(res => res.json())
-    .then(json => {
-        
-        console.log(json);
+    .then(res => {
+        if(res.ok) {
+            createModalMessage({flag: true, title: "Actualizar tarea", message: "Estado de tarea Actualizado con Éxito"})
+        }else{
+            throw new Error('Error al actualizar Tarea')
+        }
     })
+    .catch(err => {
+        createModalMessage({flag: false, title: "Actualizar tarea", message: err.message})
+    })
+   
 
 
 }
@@ -377,45 +381,48 @@ function deleteTask(idTask) {
     })
     .then(res => {
         if (res.ok) {
-            return res.json()
+            updateTasksList({...data, op: 'delete'})
         }else
         {
             throw new Error('Error al eliminar tarea')
         }
     })
-    .then(json => {
-        
-        // se procede a eliminar
-
-        console.log("acaa");
-
-        let wrapperTask = document.querySelector(` .task-list__wrapper[data-id='${idTask}']`)
-        wrapperTask.remove()
-        createModalMessage({flag: true, title: "Eliminar tarea", message: "Tarea Eliminada con Éxito"})
-        updateTasksDone()
-        updateTasksPending()
-        createDockPage()
-
+    .catch(err => {
+        createModalMessage({flag: false, title: "Eliminar tarea", message: err.message})
     })
-    .catch(err => console.log(err))
-
 
 }
 
 
+
 function updateTasksList(data) {
 
-    console.log(data);
     if(data.op === 'append') {
-
-
         taskList.append(createTask(data))
         createModalMessage({flag: true, title: "Agregar Tarea", message: "Tarea Creada con Éxito"})
-        updateTasksDone()
-        updateTasksPending()
-        createDockPage()
+    }
+    if(data.op === 'delete') {
+
+        createModalMessage({flag: true, title: "Eliminar tarea", message: "Tarea Eliminada con Éxito"})
+        let wrapperTask = document.querySelector(` .task-list__wrapper[data-id='${data.idTask}']`)
+        wrapperTask.classList.add('task-list__wrapper--hidden')
+        
+        wrapperTask.addEventListener('transitionend', e => {
+            wrapperTask.remove()
+        })
     }
 
+    if(data.op === 'update') {
+
+        updateTextStatus(data.spanText, data.checkbox)
+
+
+    }
+
+    
+    updateTasksDone()
+    updateTasksPending()
+    createDockPage()
 }
 
 
@@ -538,8 +545,7 @@ function createTask(data) {
     spanButtonCheckbox.classList.add("circle")
 
     let spanText = document.createElement("span")
-    console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    console.log(data.estado);
+ 
     spanText.textContent = inputCheckbox.checked ? 'Realizado' : 'Pendiente'
 
     labelCheckbox.append(spanButtonCheckbox)
@@ -573,7 +579,7 @@ function createTask(data) {
 
 
 
-function updateTexttask(span, checkbox) {
+function updateTextStatus(span, checkbox) {
 
     span.textContent = checkbox.checked? 'Realizada' : 'Pendiente'
 
@@ -658,8 +664,6 @@ function selectDock(index){
 
     let docks = document.querySelectorAll('.task-dock__circle')
 
-    console.log("entra acá");
-
 
     if(docks && docks.length > 0){
         docks.forEach(function(dock){
@@ -668,8 +672,6 @@ function selectDock(index){
     
         })
 
-        console.log(index);
-    
         docks[index].classList.add("task-dock__circle--active")
     }
 
@@ -699,9 +701,6 @@ function movePageAt(e) {
                 
                 currentIndex = dots.indexOf(currentDot)
 
-                console.log(nextIndex);
-                console.log(currentIndex);
-
                 let desplazamiento = -1
                 let width = taskList.offsetWidth
                 
@@ -727,8 +726,6 @@ function movePageAt(e) {
                         behavior: "smooth",
                     })
                 }
-
-                console.log(desplazamiento);
 
             }
 

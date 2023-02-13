@@ -131,6 +131,9 @@
         background-color: rgba(217, 217, 217, 0.1);
         border-radius: 30px;
         width: 100%;
+        
+
+
         .task-list {
 
 
@@ -170,8 +173,17 @@
                 padding: 10px 0;
                 display: flex;
                 justify-content: center;
+                transition: opacity .25s ease;
 
+                
                 // flex-direction: column;
+
+                &--hidden
+                {
+                    opacity: 0;
+                }
+
+
                 .task-list__element {
                     display: flex;
                     flex-direction: column;
@@ -189,7 +201,8 @@
 
                     .task-list__options {
 
-                        &>iconify-icon[icon="fluent:options-20-filled"] {
+                        &>iconify-icon[icon="fluent:options-20-filled"], 
+                        &>iconify-icon[icon="mdi:cursor-move"] {
                             font-size: 30px;
                             color: #F2B02E;
                             cursor: pointer;

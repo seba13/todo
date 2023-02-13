@@ -95,6 +95,10 @@
         }
     }
 
+    &--error::after
+    {
+        background-color: #fff;
+    }
 
     @include tablet 
     {
