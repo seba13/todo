@@ -60,20 +60,33 @@ Sortable.create(taskList, {
 
 taskList.addEventListener('pointerdown', (e) => {
 
-    if(e.target.classList.contains('move-task'))
-    {
+   
+    
         let selectedTask = e.target.closest('.task-list__wrapper')
         let tasks = [...document.querySelectorAll('.task-list__wrapper')]
 
         previousIndexTask = tasks.indexOf(selectedTask)
         console.log("pointer down!!!!!");
-    }
+    
 })
 
+
+// en mobile no se activa el evento drop
+
+// por lo que para desktop funciona el evento drop
+// y en mobile funciona el evento pointerup
+
   
-taskList.addEventListener('pointerup', (e) => {
-    
-    if(e.target.classList.contains('move-task')){
+taskList.addEventListener('pointerup', setTaskOrder)
+// taskList.addEventListener('pointermove', e => e.preventDefault())
+taskList.addEventListener('drop', setTaskOrder)
+
+
+function setTaskOrder(e){
+   
+        console.log("drop or pointerup");
+        console.log(e);
+   
         let currentTask = e.target.closest('.task-list__wrapper')
         let tasks = [...document.querySelectorAll('.task-list__wrapper')]
 
@@ -86,12 +99,17 @@ taskList.addEventListener('pointerup', (e) => {
         console.log(currentIndexTask);
         console.log(previousIndexTask);
 
+        console.log(tasks);
+
         if(currentIndexTask !==  previousIndexTask) {
+            if(e.type !== 'drop'){
+                tasks.pop()
+            }
             updateOrderTasks(tasks)
         }else{
             console.log("no entra");
         }
-    }
+    
 
     //     console.log(currentIndexTask);
     //     console.log(previousIndexTask);
@@ -104,8 +122,8 @@ taskList.addEventListener('pointerup', (e) => {
     //     updateOrderTasks(tasks.slice(previousIndexTask, currentIndexTask), previousIndexTask);
     // }
 
-})
 
+}
 
 /**
  * 
@@ -141,7 +159,7 @@ taskPending.addEventListener('load', updateTasksPending)
 taskDock.addEventListener("load", createDockPage)
 
 
-// Ejecutando automaticamente eventos load
+// Ejecutando automaticamente
 dispatchEvent(tasksDone)
 dispatchEvent(taskPending)
 dispatchEvent(taskDock)
@@ -834,8 +852,6 @@ function movePageAt(e) {
 
 
 function updateOrderTasks(tasks) {
-
-    tasks.pop()
 
     console.log(tasks);
 

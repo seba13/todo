@@ -56,26 +56,37 @@ Sortable.create(taskList, {
   animation: 150
 });
 taskList.addEventListener('pointerdown', function (e) {
-  if (e.target.classList.contains('move-task')) {
-    var selectedTask = e.target.closest('.task-list__wrapper');
-    var tasks = _toConsumableArray(document.querySelectorAll('.task-list__wrapper'));
-    previousIndexTask = tasks.indexOf(selectedTask);
-    console.log("pointer down!!!!!");
-  }
+  var selectedTask = e.target.closest('.task-list__wrapper');
+  var tasks = _toConsumableArray(document.querySelectorAll('.task-list__wrapper'));
+  previousIndexTask = tasks.indexOf(selectedTask);
+  console.log("pointer down!!!!!");
 });
-taskList.addEventListener('pointerup', function (e) {
-  if (e.target.classList.contains('move-task')) {
-    var currentTask = e.target.closest('.task-list__wrapper');
-    var tasks = _toConsumableArray(document.querySelectorAll('.task-list__wrapper'));
-    var currentIndexTask = tasks.indexOf(currentTask);
-    console.log("pointerup!!!!");
-    console.log(currentIndexTask);
-    console.log(previousIndexTask);
-    if (currentIndexTask !== previousIndexTask) {
-      updateOrderTasks(tasks);
-    } else {
-      console.log("no entra");
+
+// en mobile no se activa el evento drop
+
+// por lo que para desktop funciona el evento drop
+// y en mobile funciona el evento pointerup
+
+taskList.addEventListener('pointerup', setTaskOrder);
+// taskList.addEventListener('pointermove', e => e.preventDefault())
+taskList.addEventListener('drop', setTaskOrder);
+function setTaskOrder(e) {
+  console.log("drop or pointerup");
+  console.log(e);
+  var currentTask = e.target.closest('.task-list__wrapper');
+  var tasks = _toConsumableArray(document.querySelectorAll('.task-list__wrapper'));
+  var currentIndexTask = tasks.indexOf(currentTask);
+  console.log("pointerup!!!!");
+  console.log(currentIndexTask);
+  console.log(previousIndexTask);
+  console.log(tasks);
+  if (currentIndexTask !== previousIndexTask) {
+    if (e.type !== 'drop') {
+      tasks.pop();
     }
+    updateOrderTasks(tasks);
+  } else {
+    console.log("no entra");
   }
 
   //     console.log(currentIndexTask);
@@ -87,7 +98,7 @@ taskList.addEventListener('pointerup', function (e) {
   // {
   //     updateOrderTasks(tasks.slice(previousIndexTask, currentIndexTask), previousIndexTask);
   // }
-});
+}
 
 /**
  * 
@@ -112,7 +123,7 @@ taskPending.addEventListener('load', updateTasksPending);
 // Agregar dock
 taskDock.addEventListener("load", createDockPage);
 
-// Ejecutando automaticamente eventos load
+// Ejecutando automaticamente
 dispatchEvent(tasksDone);
 dispatchEvent(taskPending);
 dispatchEvent(taskDock);
@@ -558,7 +569,6 @@ function movePageAt(e) {
   }
 }
 function updateOrderTasks(tasks) {
-  tasks.pop();
   console.log(tasks);
   Promise.all(tasks.map(function (task, index) {
     return fetch("/to-do/".concat(task.dataset.id, "/order"), {
