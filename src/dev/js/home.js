@@ -112,14 +112,13 @@ function saveChangesUser(e) {
         body: formData
     })
     .then(response => {
-        console.log("egdsf");
         return response.json()
     })
     .then(json => {
         if(json.error) {
             throw new Error(json.error)
         }else{
-            console.log(json.message);
+            console.log(json);
         }
     })
     .catch(err => {

@@ -7,7 +7,7 @@ import {pool} from '../../../config/db.js'
 export const getUserTask = async (idUser) => {
 
 
-    const [rows, fields] = await pool.query('Select * from tasks where tasks.id_user=? and tasks.eliminated=0',[idUser])
+    const [rows, fields] = await pool.query('Select * from tasks where tasks.id_user=? and tasks.deleted=0',[idUser])
 
     return rows;
 
@@ -49,10 +49,25 @@ export const modifyStatusTask = async ({idTask, estado}) => {
     }
 }
 
+
+export const modifyOrderTask = async ({idTask, order}) => {
+
+    try{
+        const [rows, fields] = await pool.query('Update tasks set order_task=? where id_task=?;',[order,idTask])
+
+        return rows;
+
+    }catch(err){
+        return err;
+    }
+}
+
+
+
 export const eliminateTask = async({idTask}) => {
 
     try{
-        const [rows, fields] = await pool.query('update tasks set eliminated=1 where id_task=?;',[idTask])
+        const [rows, fields] = await pool.query('update tasks set deleted=1 where id_task=?;',[idTask])
 
         return rows;
     }catch(err) {

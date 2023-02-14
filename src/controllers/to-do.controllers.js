@@ -1,5 +1,5 @@
 import { getUser } from "./query/users/validityUser.js"
-import {getUserTask, saveTask, modifyTask, modifyStatusTask, eliminateTask} from "./query/users/UserTasks.js"
+import {getUserTask, saveTask, modifyTask, modifyStatusTask, modifyOrderTask, eliminateTask} from "./query/users/UserTasks.js"
 
 
 
@@ -94,6 +94,30 @@ export const modifyStatusTaskCtrl = async(req, res) => {
         return res.status(500).json({message: "Se produjo un error al actualizar tarea"})
     }
 }
+
+
+
+export const modifyOrderTaskCtrl = async(req, res) => {
+
+    console.log("order task");
+
+    console.log(req.body);
+
+
+
+    const result = await modifyOrderTask(req.body)
+
+    console.log(result);
+    
+    if(result.affectedRows == 1) {
+        
+        return res.status(202).json({message: "tarea actualizada", result})
+    }else
+    {
+        return res.status(500).json({message: "Se produjo un error al actualizar tarea"})
+    }
+}
+
 
 
 export const eliminateTaskCtrl = async(req, res) => {

@@ -13,19 +13,26 @@ const MIMETYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/w
 
 
 const configStorage =  multer.diskStorage({
-    destination: (req, file, cb)=>{
+    destination: async(req, file, cb)=>{
 
         const fileExtension = extname(file.originalname)
         const fileName = "user-"+req.session.userId 
 
-        removeLogoUser(fileName)
+        
         cb(null, join(__dirname, '../public/uploads'))
+        
 
     },
-    filename: (req, file, cb) => {
+    filename: async(req, file, cb) => {
 
         const fileExtension = extname(file.originalname)
         const fileName = "user-"+req.session.userId 
+
+        
+        await removeLogoUser(fileName, fileExtension)
+        
+        console.log(file);
+       
         cb(null, fileName+fileExtension)
     }
 })

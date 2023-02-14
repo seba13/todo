@@ -84,13 +84,12 @@ function saveChangesUser(e) {
     method: 'POST',
     body: formData
   }).then(function (response) {
-    console.log("egdsf");
     return response.json();
   }).then(function (json) {
     if (json.error) {
       throw new Error(json.error);
     } else {
-      console.log(json.message);
+      console.log(json);
     }
   })["catch"](function (err) {
     console.log(err.message);

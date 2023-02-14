@@ -12,6 +12,15 @@ let buttonRight = document.getElementById("button-right")
 let buttonNewTask = document.querySelector(".task__input-insert")
 let modalForm = buttonNewTask.querySelector('.task__form-insert')
 
+
+
+
+/**
+ *  indica la tarea que ha sido seleccionada para ordenar
+ */
+let previousIndexTask = 0;
+
+
 let inputInfo = {
 
     total: checkboxInputs.length,
@@ -46,7 +55,71 @@ Sortable.create(taskList, {
     handle: '.move-task',
     animation: 150
   });
+
+
+
+taskList.addEventListener('pointerdown', (e) => {
+
+    if(e.target.classList.contains('move-task'))
+    {
+        let selectedTask = e.target.closest('.task-list__wrapper')
+        let tasks = [...document.querySelectorAll('.task-list__wrapper')]
+
+        previousIndexTask = tasks.indexOf(selectedTask)
+        console.log("pointer down!!!!!");
+    }
+})
+
   
+taskList.addEventListener('pointerup', (e) => {
+    
+    if(e.target.classList.contains('move-task')){
+        let currentTask = e.target.closest('.task-list__wrapper')
+        let tasks = [...document.querySelectorAll('.task-list__wrapper')]
+
+        let currentIndexTask = tasks.indexOf(currentTask)
+
+        
+        console.log("pointerup!!!!");
+
+
+        console.log(currentIndexTask);
+        console.log(previousIndexTask);
+
+        if(currentIndexTask !==  previousIndexTask) {
+            updateOrderTasks(tasks)
+        }else{
+            console.log("no entra");
+        }
+    }
+
+    //     console.log(currentIndexTask);
+    //     console.log(previousIndexTask);
+
+    //     updateOrderTasks(tasks.slice(currentIndexTask, previousIndexTask), currentIndexTask);
+      
+
+    // }else
+    // {
+    //     updateOrderTasks(tasks.slice(previousIndexTask, currentIndexTask), previousIndexTask);
+    // }
+
+})
+
+
+/**
+ * 
+ * @param {*} el  elemento de dom
+ * al utilizar motor de plantillas el contenido se genera dinamicamente
+ * por lo que el evento load no se activa automaticamente
+ */
+function dispatchEvent(el){
+
+    console.log("despachando evento");
+    el.dispatchEvent(new Event('load'))
+}
+
+
 
 
 
@@ -60,16 +133,25 @@ containerTask.addEventListener('click', toggleOptionsModal)
 containerTask.addEventListener("change", updateStatus)
 
 // Agregar info task
-tasksDone.addEventListener('load', updateTasksDone())
-taskPending.addEventListener('load', updateTasksPending())
+tasksDone.addEventListener('load', updateTasksDone)
+taskPending.addEventListener('load', updateTasksPending)
 
 
 // Agregar dock
-taskDock.addEventListener("load", createDockPage())
+taskDock.addEventListener("load", createDockPage)
+
+
+// Ejecutando automaticamente eventos load
+dispatchEvent(tasksDone)
+dispatchEvent(taskPending)
+dispatchEvent(taskDock)
+
+
+
 
 
 // seleccionar dot del dock
-document.addEventListener("resize", pageSelected)
+window.addEventListener("resize", createDockPage)
 taskList.addEventListener("scroll", pageSelected)
 
 
@@ -466,10 +548,16 @@ function createTask(data) {
 
     taskListElementOptions.append(taskListOptions)
 
+    let iconMove = document.createElement('iconify-icon')
+    iconMove.setAttribute('icon', "mdi:cursor-move")
+    iconMove.classList.add('move-task')
+
     let iconOpenOptions = document.createElement("iconify-icon")
     iconOpenOptions.setAttribute('icon', 'fluent:options-20-filled')
-
+    
+    taskListOptions.append(iconMove)
     taskListOptions.append(iconOpenOptions)
+
 
 
     //Contenedor Botones de opciones
@@ -607,13 +695,15 @@ function updateTasksPending() {
 
 
 
-// determina cuantas paginas de scroll hay
-
+/**
+ * determina cuantas paginas de scroll hay
+ * y le aplica estilos a la pagina seleccionada
+ * 
+ * 
+ */
 function pageSelected() {
 
- 
-   
-
+    console.log("re");
     pages = Math.round(taskList.scrollWidth / taskList.offsetWidth);
 
     
@@ -632,9 +722,12 @@ function pageSelected() {
 
 function createDockPage() {
 
+    console.log("create dock page");
+
+
     let length = Math.round(taskList.scrollWidth / taskList.offsetWidth);
 
-
+    
     let fragment = document.createDocumentFragment()
     for(let i = 0; i< length; i++) {
 
@@ -733,6 +826,31 @@ function movePageAt(e) {
 
 
     }
+
+
+}
+
+
+
+
+function updateOrderTasks(tasks) {
+
+    tasks.pop()
+
+    console.log(tasks);
+
+    Promise.all(tasks.map( (task, index) => fetch(`/to-do/${task.dataset.id}/order`,
+    {
+        headers: {
+            "Content-Type": 'application/json'
+        },
+        method: 'PATCH',
+        body: JSON.stringify({order: index , idTask : task.dataset.id})
+    }).then(res => console.log(index))
+    ))
+    .then(res => {
+        console.log("aca res");
+    })
 
 
 }

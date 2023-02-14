@@ -1,17 +1,17 @@
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var containerTask = document.querySelector(".container-tasks");
 var checkboxInputs = containerTask.querySelectorAll("input[type='checkbox']");
 var taskList = document.getElementById("task-list");
@@ -23,6 +23,11 @@ var buttonLeft = document.getElementById("button-left");
 var buttonRight = document.getElementById("button-right");
 var buttonNewTask = document.querySelector(".task__input-insert");
 var modalForm = buttonNewTask.querySelector('.task__form-insert');
+
+/**
+ *  indica la tarea que ha sido seleccionada para ordenar
+ */
+var previousIndexTask = 0;
 var inputInfo = {
   total: checkboxInputs.length,
   getInputDone: function getInputDone() {
@@ -50,6 +55,50 @@ Sortable.create(taskList, {
   handle: '.move-task',
   animation: 150
 });
+taskList.addEventListener('pointerdown', function (e) {
+  if (e.target.classList.contains('move-task')) {
+    var selectedTask = e.target.closest('.task-list__wrapper');
+    var tasks = _toConsumableArray(document.querySelectorAll('.task-list__wrapper'));
+    previousIndexTask = tasks.indexOf(selectedTask);
+    console.log("pointer down!!!!!");
+  }
+});
+taskList.addEventListener('pointerup', function (e) {
+  if (e.target.classList.contains('move-task')) {
+    var currentTask = e.target.closest('.task-list__wrapper');
+    var tasks = _toConsumableArray(document.querySelectorAll('.task-list__wrapper'));
+    var currentIndexTask = tasks.indexOf(currentTask);
+    console.log("pointerup!!!!");
+    console.log(currentIndexTask);
+    console.log(previousIndexTask);
+    if (currentIndexTask !== previousIndexTask) {
+      updateOrderTasks(tasks);
+    } else {
+      console.log("no entra");
+    }
+  }
+
+  //     console.log(currentIndexTask);
+  //     console.log(previousIndexTask);
+
+  //     updateOrderTasks(tasks.slice(currentIndexTask, previousIndexTask), currentIndexTask);
+
+  // }else
+  // {
+  //     updateOrderTasks(tasks.slice(previousIndexTask, currentIndexTask), previousIndexTask);
+  // }
+});
+
+/**
+ * 
+ * @param {*} el  elemento de dom
+ * al utilizar motor de plantillas el contenido se genera dinamicamente
+ * por lo que el evento load no se activa automaticamente
+ */
+function dispatchEvent(el) {
+  console.log("despachando evento");
+  el.dispatchEvent(new Event('load'));
+}
 buttonNewTask.addEventListener('click', modalNewTask);
 modalForm.addEventListener('submit', addNewTask);
 // funcionalidad modal options
@@ -57,14 +106,19 @@ containerTask.addEventListener('click', toggleOptionsModal);
 containerTask.addEventListener("change", updateStatus);
 
 // Agregar info task
-tasksDone.addEventListener('load', updateTasksDone());
-taskPending.addEventListener('load', updateTasksPending());
+tasksDone.addEventListener('load', updateTasksDone);
+taskPending.addEventListener('load', updateTasksPending);
 
 // Agregar dock
-taskDock.addEventListener("load", createDockPage());
+taskDock.addEventListener("load", createDockPage);
+
+// Ejecutando automaticamente eventos load
+dispatchEvent(tasksDone);
+dispatchEvent(taskPending);
+dispatchEvent(taskDock);
 
 // seleccionar dot del dock
-document.addEventListener("resize", pageSelected);
+window.addEventListener("resize", createDockPage);
 taskList.addEventListener("scroll", pageSelected);
 
 // evento scrollear al dot del dock seleccionado
@@ -342,8 +396,12 @@ function createTask(data) {
   var taskListOptions = document.createElement("div");
   taskListOptions.classList.add("task-list__options");
   taskListElementOptions.append(taskListOptions);
+  var iconMove = document.createElement('iconify-icon');
+  iconMove.setAttribute('icon', "mdi:cursor-move");
+  iconMove.classList.add('move-task');
   var iconOpenOptions = document.createElement("iconify-icon");
   iconOpenOptions.setAttribute('icon', 'fluent:options-20-filled');
+  taskListOptions.append(iconMove);
   taskListOptions.append(iconOpenOptions);
 
   //Contenedor Botones de opciones
@@ -422,9 +480,14 @@ function updateTasksPending() {
   }
 }
 
-// determina cuantas paginas de scroll hay
-
+/**
+ * determina cuantas paginas de scroll hay
+ * y le aplica estilos a la pagina seleccionada
+ * 
+ * 
+ */
 function pageSelected() {
+  console.log("re");
   pages = Math.round(taskList.scrollWidth / taskList.offsetWidth);
 
   // redondea el width a un numero entero de la ventana de tareas
@@ -437,6 +500,7 @@ function pageSelected() {
   selectDock(index);
 }
 function createDockPage() {
+  console.log("create dock page");
   var length = Math.round(taskList.scrollWidth / taskList.offsetWidth);
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < length; i++) {
@@ -492,4 +556,24 @@ function movePageAt(e) {
       }
     }
   }
+}
+function updateOrderTasks(tasks) {
+  tasks.pop();
+  console.log(tasks);
+  Promise.all(tasks.map(function (task, index) {
+    return fetch("/to-do/".concat(task.dataset.id, "/order"), {
+      headers: {
+        "Content-Type": 'application/json'
+      },
+      method: 'PATCH',
+      body: JSON.stringify({
+        order: index,
+        idTask: task.dataset.id
+      })
+    }).then(function (res) {
+      return console.log(index);
+    });
+  })).then(function (res) {
+    console.log("aca res");
+  });
 }

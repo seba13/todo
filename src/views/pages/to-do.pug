@@ -21,6 +21,7 @@ block to-do
                     input(type="submit", value="Agregar tarea")
         .task__wrapper
             .task-list#task-list
+                - tasks.sort((a,b) => a.order_task - b.order_task)
                 each task in tasks
                     .task-list__wrapper(data-id=task.id_task)
                         .task-list__element

@@ -22,7 +22,7 @@ const hideMenu = (e) => {
 
         
         if(e.target.closest('.hamburger') != hamburger && e.target.closest('nav') != nav){
-
+            hamburger.classList.toggle('hamburger--active')
             nav.classList.add("nav--hidden")
         }
     }

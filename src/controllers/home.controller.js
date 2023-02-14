@@ -1,6 +1,6 @@
 import { getUser } from "./query/users/validityUser.js"
 import {updateLogoUser} from './query/users/updateUser.js'
-
+import {optimizeImg} from '../utils/remove-logo-user.js'
 
 /**
  * funcion controladora que renderiza el home de un usuario con autenticación
@@ -53,12 +53,27 @@ export const renderHome = (req, res) => {
 
 
 
-export const updateUserCtrl = ( (req, res) => {
+export const updateUserCtrl = ( async(req, res) => {
 
     if(req.file){
-        updateLogoUser({"logo-user": "./uploads/"+req.file.filename, idUser: req.session.userId})
+
+        try
+        {
+
+            
+            await optimizeImg(req.file.path)
+
+            updateLogoUser({"logo-user": "./uploads/"+req.file.filename, idUser: req.session.userId})
+
+            return res.status(202).json({message: "Datos Actualizados con éxito"})
+        }catch(err){
+            console.log("catch error");
+            console.log(err.message);
+            return res.status(500).json({error: err.message})
+        }
+       
+
     }
 
-    return res.status(202).json({message: "Datos Actualizados con éxito"})
 
 })
